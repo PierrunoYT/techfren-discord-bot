@@ -162,15 +162,14 @@ async def handle_links_dump_channel(message: discord.Message) -> bool:
             logger.info(f"Message {message.id} in links dump channel contains URL, allowing")
             return False
 
-        # Allow forwarded messages from other channels if configured
-        if getattr(config, 'allow_forwarded_in_links_dump', False):
-            if message.reference and message.reference.message_id and (
-                message.reference.channel_id != message.channel.id
-            ):
-                logger.info(
-                    f"Message {message.id} is forwarded from another channel, allowing"
-                )
-                return False
+        # Allow forwarded messages from other channels
+        if message.reference and message.reference.message_id and (
+            message.reference.channel_id != message.channel.id
+        ):
+            logger.info(
+                f"Message {message.id} is forwarded from another channel, allowing"
+            )
+            return False
             
         # Message doesn't contain URLs, send warning and schedule deletion
         logger.info(f"Deleting non-link message {message.id} in links dump channel")
